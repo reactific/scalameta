@@ -99,6 +99,15 @@ class TemplateSuite extends ParseSuite {
       templStat("class C { def x: Int }")
   }
 
+  test("class C { def this(x : Int) = this() }") {
+    val Class(Nil, Type.Name("C"), Nil, EmptyCtor(),
+    Template(Nil, Nil, EmptySelf(),
+             Some(Seq(Ctor.Secondary(Nil, Ctor.Ref.Name("this"),
+             Seq(Seq(Term.Param(Nil, Term.Name("x"), Some(Type.Name("Int")), None))),
+             Term.Apply(Ctor.Ref.Name("this"), Nil)))))) =
+      templStat("class C { def this(x : Int) = this() }")
+  }
+
   test("class C(x: Int)") {
     val Class(Nil, Type.Name("C"), Nil,
               Ctor.Primary(Nil, Ctor.Name("this"),
